@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senor Web Storefront - Proof of Concept</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        accent: {
+                            50: 'var(--accent-50)',
+                            100: 'var(--accent-100)',
+                            500: 'var(--accent-500)',
+                            600: 'var(--accent-600)',
+                            700: 'var(--accent-700)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@500;700;900&family=Fira+Code:wght@400;600&family=Outfit:wght@400;600;800&family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        .font-sans { font-family: 'Inter', sans-serif; }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        .font-display { font-family: 'Outfit', sans-serif; }
+        .font-rounded { font-family: 'Fredoka', sans-serif; }
+    </style>
+</head>
+<body id="storeBody" class="h-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 flex flex-col justify-between pb-20 md:pb-0 font-sans">
+
+    <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold transition">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span class="hidden sm:inline">Senor Web Platform</span>
+                </a>
+                <div class="flex items-center space-x-2">
+                    <div id="navStoreIcon" class="w-8 h-8 rounded-lg bg-accent-600 text-white flex items-center justify-center font-bold shadow-md">
+                        <i class="fa-solid fa-store text-sm"></i>
+                    </div>
+                    <div>
+                        <h1 id="navStoreName" class="font-black text-base sm:text-lg tracking-tight leading-none">Store Name</h1>
+                        <span id="navStoreType" class="text-xs text-slate-500 dark:text-slate-400 font-medium">Category</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="openShareModal()" class="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-xs flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-qrcode text-accent-600"></i>
+                    <span class="hidden sm:inline">Share / QR</span>
+                </button>
+                <button onclick="toggleEditDrawer()" class="px-3.5 py-2 rounded-xl bg-accent-600 hover:bg-accent-700 text-white font-bold text-xs flex items-center space-x-2 shadow-lg shadow-accent-600/30 transition">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span class="hidden sm:inline">Edit Store</span>
+                </button>
+                <button onclick="toggleCartDrawer()" class="relative p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span id="cartBadge" class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-accent-600 text-white text-[10px] font-bold flex items-center justify-center hidden">0</span>
+                </button>
+                <button onclick="toggleStoreDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Dynamic Header Container with Background Image Support -->
+        <div id="dynamicHeaderContainer">
+            <!-- Populated via JS depending on theme -->
+        </div>
+
+        <!-- Catalog & Search Section -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
+                <div id="categoryFilters" class="flex items-center space-x-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+                    <button onclick="filterCategory('All')" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold bg-accent-600 text-white whitespace-nowrap shadow-md">All Items</button>
+                </div>
+                <div class="relative w-full md:w-80">
+                    <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
+                        <i class="fa-solid fa-search"></i>
+                    </span>
+                    <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Search catalog items..." class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm focus:ring-2 focus:ring-accent-500 focus:outline-none transition">
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Populated via JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500">
+            <p>Powered by <span class="font-bold text-accent-600">Senor Web Platform</span> &copy; 2026. Instant multi-category storefront generator.</p>
+        </div>
+    </footer>
+
+    <!-- Edit Store Drawer -->
+    <div id="editDrawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white dark:bg-slate-900 shadow-2xl border-l border-slate-200 dark:border-slate-800 p-6 transform translate-x-full transition-transform duration-300 flex flex-col justify-between overflow-y-auto">
+        <div>
+            <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-6">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg bg-accent-600 text-white flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-sliders text-xs"></i>
+                    </div>
+                    <h2 class="font-bold text-lg">On-the-Spot Editor</h2>
+                </div>
+                <button onclick="toggleEditDrawer()" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <form id="liveEditForm" onsubmit="applyLiveEdits(event)" class="space-y-6">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider mb-2 text-slate-500">Business Name</label>
+                    <input type="text" id="editNameInput" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm font-medium focus:ring-2 focus:ring-accent-500 focus:outline-none">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider mb-2 text-slate-500">Category Type</label>
+                    <select id="editTypeInput" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm font-medium focus:ring-2 focus:ring-accent-500 focus:outline-none">
+                        <option value="Food & Dining">Food & Restaurant Delivery</option>
+                        <option value="Thrift & Vintage">Thrift & Used Goods Market</option>
+                        <option value="Furniture & Living">Furniture & Home Decor</option>
+                        <option value="Tech & Gadgets">Tech & Electronics Store</option>
+                        <option value="Art & Crafts">Artisanal & Handcrafted Goods</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider mb-2 text-slate-500">UI Theme & Header Layout</label>
+                    <select id="editThemeInput" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm font-medium focus:ring-2 focus:ring-accent-500 focus:outline-none">
+                        <option value="Modern Minimalist">Modern Minimalist</option>
+                        <option value="Food Delivery Bento">Food Delivery Bento</option>
+                        <option value="Tech Brutalist">Tech Brutalist</option>
+                        <option value="Thrift Retro">Thrift Retro</option>
+                        <option value="Luxury Elegant">Luxury Elegant</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider mb-2 text-slate-500">Typography Font</label>
+                    <select id="editFontInput" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-sm font-medium focus:ring-2 focus:ring-accent-500 focus:outline-none">
+                        <option value="sans">Inter Sans</option>
+                        <option value="serif">Playfair Serif</option>
+                        <option value="mono">Fira Code Mono</option>
+                        <option value="display">Outfit Display</option>
+                        <option value="rounded">Fredoka Rounded</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider mb-2 text-slate-500">Color Accent (10 Options)</label>
+                    <div class="grid grid-cols-5 gap-2">
+                        <label class="cursor-pointer text-center"><input type="radio" name="editColor" value="emerald" class="peer sr-only"><div class="w-10 h-10 mx-auto rounded-full bg-emerald-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow"></div><span class="text-[10px]">Emerald</span></label>
+                        <label class="cursor-pointer text-center"><input type="radio" name="editColor" value="indigo" class="peer sr-only"><div class="w-10 h-10 mx-auto rounded-full bg-indigo-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow"></div><span class="text-[10px]">Indigo</span></label>
+                        <label class="cursor-pointer text-center"><input type="radio" name="editColor" value="rose" class="peer sr-only"><div class="w-10 h-10 mx-auto rounded-full bg-rose-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow"></div><span class="text-[10px]">Rose</span></label>
+                        <label class="cursor-pointer text-center"><input type="radio" name="editColor" value="amber" class="peer sr-only"><div class="w-10 h-10 mx-auto rounded-full bg-amber-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow"></div><span class="text-[10px]">Amber</span></label>
+                        <label class="cursor-pointer text-center"><input type="radio" name="editColor" value="violet" class="peer sr-only"><div class="w-10 h-10 mx-auto rounded-full bg-violet-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow"></div><span class="text-[10px]">Violet</span></label>
+                        <label class="cursor-pointer text-center"><input type="radio" name="editColor" value="cyan" class="peer sr-only"><div class="w-10 h-10 mx-auto rounded-full bg-cyan-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow"></div><span class="text-[10px]">Cyan</span></label>
+                        <label class="cursor-pointer text-center"><input type="radio" name="editColor" value="fuchsia" class="peer sr-only"><div class="w-10 h-10 mx-auto rounded-full bg-fuchsia-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow"></div><span class="text-[10px]">Fuchsia</span></label>
+                        <label class="cursor-pointer text-center"><input type="radio" name="editColor" value="teal" class="peer sr-only"><div class="w-10 h-10 mx-auto rounded-full bg-teal-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow"></div><span class="text-[10px]">Teal</span></label>
+                        <label class="cursor-pointer text-center"><input type="radio" name="editColor" value="orange" class="peer sr-only"><div class="w-10 h-10 mx-auto rounded-full bg-orange-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow"></div><span class="text-[10px]">Orange</span></label>
+                        <label class="cursor-pointer text-center"><input type="radio" name="editColor" value="slate" class="peer sr-only"><div class="w-10 h-10 mx-auto rounded-full bg-slate-700 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow"></div><span class="text-[10px]">Slate</span></label>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-accent-600 hover:bg-accent-700 text-white font-bold shadow-lg shadow-accent-600/30 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-check"></i>
+                    <span>Apply Live Changes</span>
+                </button>
+            </form>
+        </div>
+        <div class="pt-6 mt-6 border-t border-slate-200 dark:border-slate-800 text-center">
+            <button onclick="openShareModal()" class="w-full py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold transition flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-qrcode"></i>
+                <span>Get QR Code & Share Link</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div id="cartDrawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white dark:bg-slate-900 shadow-2xl border-l border-slate-200 dark:border-slate-800 p-6 transform translate-x-full transition-transform duration-300 flex flex-col justify-between">
+        <div>
+            <div class="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800 mb-6">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-lg bg-accent-600 text-white flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-cart-shopping text-xs"></i>
+                    </div>
+                    <h2 class="font-bold text-lg">Your Cart</h2>
+                </div>
+                <button onclick="toggleCartDrawer()" class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="cartItemsList" class="space-y-4 max-h-[50vh] overflow-y-auto pr-2">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+        <div class="pt-6 border-t border-slate-200 dark:border-slate-800">
+            <div class="flex items-center justify-between mb-4 font-bold text-lg">
+                <span>Total:</span>
+                <span id="cartTotalPrice">$0.00</span>
+            </div>
+            <button onclick="checkoutCart()" class="w-full py-4 rounded-xl bg-accent-600 hover:bg-accent-700 text-white font-bold shadow-xl shadow-accent-600/30 transition flex items-center justify-center space-x-2">
+                <i class="fa-solid fa-lock"></i>
+                <span>Proceed to Checkout</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Share & QR Modal -->
+    <div id="shareModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 dark:border-slate-800 text-center relative">
+            <button onclick="closeShareModal()" class="absolute top-4 right-4 p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="w-12 h-12 rounded-2xl bg-accent-600 text-white flex items-center justify-center font-bold text-xl mx-auto mb-4">
+                <i class="fa-solid fa-qrcode"></i>
+            </div>
+            <h3 class="font-bold text-xl mb-1">Share Your Storefront</h3>
+            <p class="text-xs text-slate-500 mb-6">Scan QR code or copy direct link to share with customers.</p>
+
+            <div class="bg-white p-4 rounded-2xl shadow-inner inline-block border border-slate-200 mb-6">
+                <img id="qrCodeImage" src="" alt="QR Code" class="w-48 h-48 mx-auto">
+            </div>
+
+            <div class="space-y-3">
+                <input type="text" id="shareUrlInput" readonly class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-mono text-center">
+                <button onclick="copyShareableUrl()" class="w-full py-3.5 rounded-xl bg-accent-600 hover:bg-accent-700 text-white font-bold text-xs shadow-lg shadow-accent-600/30 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-copy"></i>
+                    <span>Copy Direct Link</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Application Logic -->
+    <script>
+        const colorPalettes = {
+            emerald: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857' },
+            indigo: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' },
+            rose: { 50: '#fff1f2', 100: '#ffe4e6', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c' },
+            amber: { 50: '#fffbeb', 100: '#fef3c7', 500: '#f59e0b', 600: '#d97706', 700: '#b45309' },
+            violet: { 50: '#f5f3ff', 100: '#ede9fe', 500: '#8b5cf6', 600: '#7c3aed', 700: '#6d28d9' },
+            cyan: { 50: '#ecfeff', 100: '#cffafe', 500: '#06b6d4', 600: '#0891b2', 700: '#0e7490' },
+            fuchsia: { 50: '#fdf4ff', 100: '#fae8ff', 500: '#d946ef', 600: '#c026d3', 700: '#a21caf' },
+            teal: { 50: '#f0fdf4', 100: '#ccfbf1', 500: '#14b8a6', 600: '#0d9488', 700: '#0f766e' },
+            orange: { 50: '#fff7ed', 100: '#ffedd5', 500: '#f97316', 600: '#ea580c', 700: '#c2410c' },
+            slate: { 50: '#f8fafc', 100: '#f1f5f9', 500: '#64748b', 600: '#475569', 700: '#334155' }
+        };
+
+        const catalogDatabase = {
+            "Food & Dining": [
+                { id: 'f1', name: 'Truffle Burger & Fries', price: 18.50, cat: 'Burgers', image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80', desc: 'Juicy prime patty with black truffle mayo, aged cheddar, and crispy fries.' },
+                { id: 'f2', name: 'Artisanal Margherita Pizza', price: 16.00, cat: 'Pizza', image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=600&q=80', desc: 'San Marzano tomatoes, fresh mozzarella, basil, and extra virgin olive oil.' },
+                { id: 'f3', name: 'Matcha Iced Latte', price: 6.50, cat: 'Beverages', image: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=600&q=80', desc: 'Ceremonial grade Uji matcha with oat milk over hand-carved ice.' },
+                { id: 'f4', name: 'Molten Lava Chocolate Cake', price: 9.00, cat: 'Dessert', image: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=600&q=80', desc: 'Warm Valrhona chocolate cake with liquid center and vanilla bean gelato.' },
+                { id: 'f5', name: 'Crispy Calamari Basket', price: 14.00, cat: 'Appetizers', image: 'https://images.unsplash.com/photo-1599487488170-deddd191a7e2?auto=format&fit=crop&w=600&q=80', desc: 'Lightly battered fresh squid served with lemon garlic aioli.' },
+                { id: 'f6', name: 'Berry Hibiscus Lemonade', price: 5.50, cat: 'Beverages', image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=600&q=80', desc: 'Hand-pressed lemonade infused with organic wild berries and hibiscus.' }
+            ],
+            "Thrift & Vintage": [
+                { id: 't1', name: '90s Oversized Denim Jacket', price: 45.00, cat: 'Apparel', image: 'https://images.unsplash.com/photo-1543076447-215ad9ba6923?auto=format&fit=crop&w=600&q=80', desc: 'Authentic vintage distressed wash denim with classic brass button hardware.' },
+                { id: 't2', name: 'Retro Polaroid 600 Camera', price: 85.00, cat: 'Collectibles', image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=600&q=80', desc: 'Tested and fully operational vintage instant film camera in pristine condition.' },
+                { id: 't3', name: 'Classic Leather Weekend Duffle', price: 120.00, cat: 'Accessories', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80', desc: 'Patinated saddle leather travel bag with brass zippers and reinforced straps.' },
+                { id: 't4', name: 'Vintage Brass Desk Lamp', price: 55.00, cat: 'Decor', image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=600&q=80', desc: 'Mid-century adjustable swing arm desk lamp with rich aged brass finish.' },
+                { id: 't5', name: 'Chunky Knit Wool Cardigan', price: 40.00, cat: 'Apparel', image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=600&q=80', desc: 'Cozy 100% lambswool hand-stitched vintage cardigan in oatmeal hue.' },
+                { id: 't6', name: 'Analog Mechanical Alarm Clock', price: 32.00, cat: 'Collectibles', image: 'https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?auto=format&fit=crop&w=600&q=80', desc: 'Double bell brass wind-up mechanical clock with luminous dial.' }
+            ],
+            "Furniture & Living": [
+                { id: 'fu1', name: 'Nordic Oak Lounge Chair', price: 340.00, cat: 'Seating', image: 'https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?auto=format&fit=crop&w=600&q=80', desc: 'Solid white oak frame with woven wool upholstery and ergonomic contour.' },
+                { id: 'fu2', name: 'Minimalist Terrazzo Coffee Table', price: 290.00, cat: 'Tables', image: 'https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=600&q=80', desc: 'Hand-poured Italian terrazzo top resting on matte black powder-coated steel.' },
+                { id: 'fu3', name: 'Handwoven Jute Area Rug', price: 150.00, cat: 'Decor', image: 'https://images.unsplash.com/photo-1600121848594-d8644e57abab?auto=format&fit=crop&w=600&q=80', desc: 'Sustainable braided natural fiber rug adding organic texture to any living space.' },
+                { id: 'fu4', name: 'Ceramic Table Vase', price: 42.00, cat: 'Decor', image: 'https://images.unsplash.com/photo-1581783342308-f792dbdd27c5?auto=format&fit=crop&w=600&q=80', desc: 'Matte sand-glazed stoneware vase designed for dried pampas and botanicals.' },
+                { id: 'fu5', name: 'Arched Full-Length Mirror', price: 185.00, cat: 'Decor', image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=600&q=80', desc: 'Elegant brushed metal frame arched mirror for modern entryways.' },
+                { id: 'fu6', name: 'Solid Walnut Bookshelf', price: 310.00, cat: 'Storage', image: 'https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?auto=format&fit=crop&w=600&q=80', desc: 'Five-tier open slat architectural shelving unit crafted from American walnut.' }
+            ],
+            "Tech & Gadgets": [
+                { id: 'tc1', name: 'Custom Mechanical Keyboard', price: 195.00, cat: 'Peripherals', image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=600&q=80', desc: 'Hot-swappable gasket mount board with lubed linear switches and PBT keycaps.' },
+                { id: 'tc2', name: 'Studio Wireless Headphones', price: 249.00, cat: 'Audio', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80', desc: 'Active noise cancelling headphones with studio reference tuning and 40h battery.' },
+                { id: 'tc3', name: 'Aluminum Desk Hub Stand', price: 65.00, cat: 'Accessories', image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=600&q=80', desc: 'Multi-port USB-C hub with 4K HDMI, power delivery pass-through, and stand.' },
+                { id: 'tc4', name: 'MagSafe Wireless Charging Pad', price: 39.00, cat: 'Power', image: 'https://images.unsplash.com/photo-1622445275576-7743d570bf98?auto=format&fit=crop&w=600&q=80', desc: 'Magnetic fast wireless charger with braided cable and CNC aluminum housing.' },
+                { id: 'tc5', name: 'Ergonomic Vertical Mouse', price: 59.00, cat: 'Peripherals', image: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=600&q=80', desc: 'Sculpted wireless mouse designed for natural wrist posture and precision.' },
+                { id: 'tc6', name: 'Portable SSD 2TB Drive', price: 160.00, cat: 'Storage', image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=600&q=80', desc: 'Lightning-fast NVMe external pocket solid state drive with rugged shell.' }
+            ],
+            "Art & Crafts": [
+                { id: 'ac1', name: 'Hand-Thrown Ceramic Mug Set', price: 48.00, cat: 'Pottery', image: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=600&q=80', desc: 'Set of 2 speckled stoneware mugs with comfortable ergonomic handles.' },
+                { id: 'ac2', name: 'Abstract Textured Canvas Art', price: 210.00, cat: 'Paintings', image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=600&q=80', desc: 'Original palette knife acrylic painting on heavy cotton stretched canvas.' },
+                { id: 'ac3', name: 'Macrame Wall Hanging', price: 65.00, cat: 'Fiber Art', image: 'https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&w=600&q=80', desc: 'Boho natural cotton cord wall tapestry knotted on a seasoned driftwood branch.' },
+                { id: 'ac4', name: 'Botanical Pressed Print', price: 35.00, cat: 'Prints', image: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80', desc: 'High-res archival gallery print of locally foraged fern and wildflower pressings.' },
+                { id: 'ac5', name: 'Handcrafted Soy Wax Candle', price: 24.00, cat: 'Home Fragrance', image: 'https://images.unsplash.com/photo-1603006905003-be475563bc59?auto=format&fit=crop&w=600&q=80', desc: 'Pour-scented cedarwood and amber soy candle in amber glass jar.' },
+                { id: 'ac6', name: 'Woven Seagrass Storage Basket', price: 45.00, cat: 'Home Decor', image: 'https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=600&q=80', desc: 'Hand-coiled natural fiber basket with reinforced handles.' }
+            ]
+        };
+
+        let currentStore = {
+            name: "Apex Bistro",
+            type: "Food & Dining",
+            theme: "Food Delivery Bento",
+            color: "emerald",
+            font: "sans"
+        };
+
+        let cart = [];
+        let activeCategory = "All";
+        let searchQuery = "";
+
+        function parseUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('name')) currentStore.name = decodeURIComponent(params.get('name'));
+            if (params.get('type')) currentStore.type = decodeURIComponent(params.get('type'));
+            if (params.get('theme')) currentStore.theme = decodeURIComponent(params.get('theme'));
+            if (params.get('color')) currentStore.color = decodeURIComponent(params.get('color'));
+            if (params.get('font')) currentStore.font = decodeURIComponent(params.get('font'));
+        }
+
+        function updateUrlParams() {
+            const params = new URLSearchParams();
+            params.set('name', currentStore.name);
+            params.set('type', currentStore.type);
+            params.set('theme', currentStore.theme);
+            params.set('color', currentStore.color);
+            params.set('font', currentStore.font);
+            
+            const newRelativePathQuery = window.location.pathname + '?' + params.toString();
+            history.pushState(null, '', newRelativePathQuery);
+        }
+
+        function applyStoreThemeStyles() {
+            const colorObj = colorPalettes[currentStore.color] || colorPalettes['emerald'];
+            const root = document.documentElement;
+            root.style.setProperty('--accent-50', colorObj[50]);
+            root.style.setProperty('--accent-100', colorObj[100]);
+            root.style.setProperty('--accent-500', colorObj[500]);
+            root.style.setProperty('--accent-600', colorObj[600]);
+            root.style.setProperty('--accent-700', colorObj[700]);
+
+            const body = document.getElementById('storeBody');
+            body.className = `h-full bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300 flex flex-col justify-between pb-20 md:pb-0 font-${currentStore.font}`;
+
+            document.getElementById('navStoreName').textContent = currentStore.name;
+            document.getElementById('navStoreType').textContent = currentStore.type;
+
+            document.getElementById('editNameInput').value = currentStore.name;
+            document.getElementById('editTypeInput').value = currentStore.type;
+            document.getElementById('editThemeInput').value = currentStore.theme;
+            document.getElementById('editFontInput').value = currentStore.font;
+
+            const colorRadio = document.querySelector(`input[name="editColor"][value="${currentStore.color}"]`);
+            if (colorRadio) colorRadio.checked = true;
+
+            renderDynamicHeader();
+            renderCategories();
+            renderProducts();
+            updateUrlParams();
+        }
+
+        function renderDynamicHeader() {
+            const container = document.getElementById('dynamicHeaderContainer');
+            const theme = currentStore.theme;
+
+            if (theme === 'Food Delivery Bento') {
+                container.innerHTML = `
+                    <section class="relative py-16 px-4 sm:px-6 lg:px-8 text-white overflow-hidden bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1600&q=80');">
+                        <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"></div>
+                        <div class="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div>
+                                <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-accent-500/30 text-accent-300 mb-3 inline-block border border-accent-500/40">Bento Delivery Hub</span>
+                                <h1 class="text-4xl sm:text-5xl font-black tracking-tight mb-2">${currentStore.name}</h1>
+                                <p class="text-slate-300 text-sm max-w-xl">Freshly prepared creations delivered right to your door with live tracking and fast order processing.</p>
+                            </div>
+                            <div class="bg-white/10 dark:bg-slate-900/60 backdrop-blur-md p-5 rounded-2xl border border-white/20 flex items-center space-x-6">
+                                <div><div class="text-xs text-slate-400 uppercase font-bold">Delivery</div><div class="font-black text-lg">20-30 min</div></div>
+                                <div class="w-px h-8 bg-white/20"></div>
+                                <div><div class="text-xs text-slate-400 uppercase font-bold">Rating</div><div class="font-black text-lg text-amber-400"><i class="fa-solid fa-star"></i> 4.9</div></div>
+                            </div>
+                        </div>
+                    </section>`;
+            } else if (theme === 'Tech Brutalist') {
+                container.innerHTML = `
+                    <section class="relative py-14 px-4 sm:px-6 lg:px-8 text-white border-b-4 border-accent-500 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1600&q=80');">
+                        <div class="absolute inset-0 bg-slate-950/90"></div>
+                        <div class="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                            <div>
+                                <div class="inline-block px-3 py-1 bg-accent-500 text-slate-950 font-black text-xs uppercase mb-2">Brutalist Tech Grid v2</div>
+                                <h1 class="text-4xl sm:text-6xl font-black tracking-tighter uppercase">${currentStore.name}</h1>
+                            </div>
+                            <div class="border-2 border-slate-700 bg-slate-900/80 backdrop-blur px-4 py-2 font-mono text-xs text-accent-400">STATUS: ONLINE / SECURE</div>
+                        </div>
+                    </section>`;
+            } else if (theme === 'Thrift Retro') {
+                container.innerHTML = `
+                    <section class="relative py-16 px-4 sm:px-6 lg:px-8 border-b border-amber-900/20 text-amber-950 dark:text-amber-100 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80');">
+                        <div class="absolute inset-0 bg-amber-100/90 dark:bg-slate-950/85 backdrop-blur-sm"></div>
+                        <div class="max-w-7xl mx-auto text-center relative z-10">
+                            <span class="inline-block px-4 py-1 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 text-xs font-bold uppercase tracking-widest mb-3 border border-amber-500/30">Vintage & Thrift Goods</span>
+                            <h1 class="text-4xl sm:text-5xl font-bold tracking-tight mb-3 font-serif">${currentStore.name}</h1>
+                            <p class="text-sm max-w-lg mx-auto opacity-80">Hand-curated retro gear, classic apparel, and one-of-a-kind nostalgic collectibles.</p>
+                        </div>
+                    </section>`;
+            } else if (theme === 'Luxury Elegant') {
+                container.innerHTML = `
+                    <section class="relative py-20 px-4 sm:px-6 lg:px-8 text-white border-b border-slate-800 text-center bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80');">
+                        <div class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm"></div>
+                        <div class="max-w-4xl mx-auto relative z-10">
+                            <span class="text-xs uppercase tracking-[0.3em] text-accent-400 font-bold mb-3 block">Exquisite Collection</span>
+                            <h1 class="text-4xl sm:text-6xl font-serif font-medium tracking-wide mb-4">${currentStore.name}</h1>
+                            <div class="w-16 h-0.5 bg-accent-500 mx-auto"></div>
+                        </div>
+                    </section>`;
+            } else {
+                // Modern Minimalist
+                container.innerHTML = `
+                    <section class="relative py-16 px-4 sm:px-6 lg:px-8 text-white border-b border-slate-200 dark:border-slate-800 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1600&q=80');">
+                        <div class="absolute inset-0 bg-slate-900/80 dark:bg-slate-950/85 backdrop-blur-sm"></div>
+                        <div class="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div>
+                                <span class="text-xs font-bold text-accent-400 uppercase tracking-widest mb-2 block">Verified Marketplace Storefront</span>
+                                <h1 class="text-3xl sm:text-5xl font-black tracking-tight mb-2">${currentStore.name}</h1>
+                                <p class="text-slate-300 text-sm max-w-xl">Explore our curated selection of high-quality catalog items ready for instant ordering.</p>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <div class="px-5 py-3 rounded-2xl bg-white/10 dark:bg-slate-900/60 backdrop-blur border border-white/20 text-center">
+                                    <div class="text-xs text-slate-300 font-bold">Category</div>
+                                    <div class="font-bold text-sm text-white">${currentStore.type}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>`;
+            }
+        }
+
+        function renderCategories() {
+            const items = catalogDatabase[currentStore.type] || catalogDatabase["Food & Dining"];
+            const cats = ["All", ...new Set(items.map(i => i.cat))];
+            const container = document.getElementById('categoryFilters');
+            container.innerHTML = '';
+            cats.forEach(cat => {
+                const isActive = activeCategory === cat;
+                container.innerHTML += `
+                    <button onclick="filterCategory('${cat}')" class="cat-btn px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition shadow-sm ${isActive ? 'bg-accent-600 text-white shadow-md' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-700'}">${cat}</button>
+                `;
+            });
+        }
+
+        function filterCategory(cat) {
+            activeCategory = cat;
+            renderCategories();
+            renderProducts();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const items = catalogDatabase[currentStore.type] || catalogDatabase["Food & Dining"];
+            const grid = document.getElementById('productGrid');
+            
+            const filtered = items.filter(item => {
+                const matchesCat = activeCategory === "All" || item.cat === activeCategory;
+                const matchesSearch = item.name.toLowerCase().includes(searchQuery) || item.desc.toLowerCase().includes(searchQuery);
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-16 text-center text-slate-400"><i class="fa-solid fa-box-open text-3xl mb-2"></i><p>No items found matching your criteria.</p></div>`;
+                return;
+            }
+
+            grid.innerHTML = '';
+            filtered.forEach(item => {
+                grid.innerHTML = grid.innerHTML + `
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col justify-between group">
+                        <div>
+                            <div class="h-52 overflow-hidden relative">
+                                <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                                <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider">${item.cat}</span>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="font-bold text-base mb-1">${item.name}</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">${item.desc}</p>
+                                <div class="text-accent-600 font-black text-lg">$${item.price.toFixed(2)}</div>
+                            </div>
+                        </div>
+                        <div class="p-5 pt-0">
+                            <button onclick="addToCart('${item.id}')" class="w-full py-3 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-accent-600 hover:text-white dark:hover:bg-accent-600 font-bold text-xs transition flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-plus"></i>
+                                <span>Add to Cart</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function addToCart(id) {
+            const items = catalogDatabase[currentStore.type] || catalogDatabase["Food & Dining"];
+            const item = items.find(i => i.id === id);
+            if (!item) return;
+
+            const existing = cart.find(i => i.id === id);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ ...item, qty: 1 });
+            }
+            updateCartUI();
+            toggleCartDrawer();
+        }
+
+        function updateCartUI() {
+            const badge = document.getElementById('cartBadge');
+            const totalCount = cart.reduce((sum, i) => sum + i.qty, 0);
+            if (totalCount > 0) {
+                badge.textContent = totalCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            const list = document.getElementById('cartItemsList');
+            list.innerHTML = '';
+
+            if (cart.length === 0) {
+                list.innerHTML = `<p class="text-center text-slate-400 py-12 text-sm">Your cart is currently empty.</p>`;
+                document.getElementById('cartTotalPrice').textContent = '$0.00';
+                return;
+            }
+
+            let subtotal = 0;
+            cart.forEach(item => {
+                subtotal += item.price * item.qty;
+                list.innerHTML += `
+                    <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-slate-800">
+                        <div>
+                            <h4 class="font-bold text-sm">${item.name}</h4>
+                            <p class="text-xs text-slate-500">$${item.price.toFixed(2)} x ${item.qty}</p>
+                        </div>
+                        <div class="font-black text-sm">$${(item.price * item.qty).toFixed(2)}</div>
+                    </div>
+                `;
+            });
+            document.getElementById('cartTotalPrice').textContent = '$' + subtotal.toFixed(2);
+        }
+
+        function toggleEditDrawer() {
+            const drawer = document.getElementById('editDrawer');
+            drawer.classList.toggle('translate-x-full');
+        }
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            drawer.classList.toggle('translate-x-full');
+        }
+
+        function applyLiveEdits(e) {
+            e.preventDefault();
+            currentStore.name = document.getElementById('editNameInput').value;
+            currentStore.type = document.getElementById('editTypeInput').value;
+            currentStore.theme = document.getElementById('editThemeInput').value;
+            currentStore.font = document.getElementById('editFontInput').value;
+            const selectedColor = document.querySelector('input[name="editColor"]:checked');
+            if (selectedColor) currentStore.color = selectedColor.value;
+
+            activeCategory = "All";
+            applyStoreThemeStyles();
+            toggleEditDrawer();
+        }
+
+        function openShareModal() {
+            const modal = document.getElementById('shareModal');
+            const url = window.location.href;
+            document.getElementById('shareUrlInput').value = url;
+            document.getElementById('qrCodeImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+            modal.classList.remove('hidden');
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.add('hidden');
+        }
+
+        function copyShareableUrl() {
+            const input = document.getElementById('shareUrlInput');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            alert('Storefront shareable link copied to clipboard!');
+        }
+
+        function toggleStoreDarkMode() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+            } else {
+                html.classList.add('dark');
+            }
+        }
+
+        function checkoutCart() {
+            if (cart.length === 0) {
+                alert('Your cart is empty.');
+                return;
+            }
+            alert('Order successfully placed through Senor Web Secure Checkout!');
+            cart = [];
+            updateCartUI();
+            toggleCartDrawer();
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            parseUrlParams();
+            applyStoreThemeStyles();
+        };
+    </script>
+</body>
+</html>

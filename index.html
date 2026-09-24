@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Senor Web - Multi-Category Marketplace & Storefront Creator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="h-full bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-300 flex flex-col justify-between">
+
+    <header class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <a href="index.html" class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                        <i class="fa-solid fa-store text-lg"></i>
+                    </div>
+                    <span class="text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">Senor Web</span>
+                </a>
+                <span class="hidden sm:inline-block px-2.5 py-0.5 text-xs font-semibold bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 rounded-full">Platform v1.0</span>
+            </div>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="#hero" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Overview</a>
+                <a href="#creator" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Create Store</a>
+                <a href="#showcase" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Marketplace Showcase</a>
+                <a href="#features" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Features</a>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center space-x-3">
+                <!-- Dark Mode Toggle -->
+                <button id="darkModeToggle" onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition" aria-label="Toggle Dark Mode">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:inline"></i>
+                </button>
+
+                <!-- User Profile Badge -->
+                <div class="hidden sm:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" alt="User" class="w-7 h-7 rounded-full object-cover">
+                    <span class="text-xs font-semibold">Alex Creator</span>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="md:hidden p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer -->
+        <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-6 space-y-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+            <a href="#hero" onclick="toggleMobileMenu()" class="block py-2 font-medium">Overview</a>
+            <a href="#creator" onclick="toggleMobileMenu()" class="block py-2 font-medium">Create Store</a>
+            <a href="#showcase" onclick="toggleMobileMenu()" class="block py-2 font-medium">Marketplace Showcase</a>
+            <a href="#features" onclick="toggleMobileMenu()" class="block py-2 font-medium">Features</a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section id="hero" class="relative overflow-hidden pt-16 pb-24 lg:pt-24 lg:pb-32 bg-gradient-to-b from-indigo-50/50 via-transparent to-transparent dark:from-indigo-950/20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+                <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 text-xs font-bold uppercase tracking-wider mb-6 animate-pulse">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Instant Multi-Category Storefront Platform</span>
+                </div>
+                <h1 class="text-4xl sm:text-6xl font-black tracking-tight max-w-4xl mx-auto leading-tight mb-6">
+                    Launch Your Online Business in <span class="bg-gradient-to-r from-indigo-600 via-violet-600 to-fuchsia-600 bg-clip-text text-transparent">Seconds, Not Days</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10">
+                    <b>Senor Web</b> empowers restaurants, thrift shops, boutique furniture creators, and tech vendors to deploy custom storefronts with live on-the-spot editing, font customization, and distinct UI styles.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#creator" class="px-8 py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-xl shadow-indigo-600/30 transition flex items-center justify-center space-x-3">
+                        <i class="fa-solid fa-plus-circle"></i>
+                        <span>Create Your Store Now</span>
+                    </a>
+                    <a href="#showcase" class="px-8 py-4 rounded-2xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 font-bold transition flex items-center justify-center space-x-3">
+                        <i class="fa-solid fa-compass"></i>
+                        <span>Explore Marketplace</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Store Creator Wizard Section -->
+        <section id="creator" class="py-16 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200 dark:border-slate-700 p-8 sm:p-12 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -z-10"></div>
+                
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <h2 class="text-3xl font-black tracking-tight mb-3">Storefront Generator Wizard</h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm sm:text-base">Configure your business identity, select your UI style, font family, and accent color, and jump straight into your fully functional storefront.</p>
+                </div>
+
+                <form id="storeCreatorForm" onsubmit="handleStoreCreation(event)" class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Business Name -->
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="bizName">Business Name</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+                                    <i class="fa-solid fa-store"></i>
+                                </span>
+                                <input type="text" id="bizName" required placeholder="e.g. Urban Bistro & Bar" class="w-full pl-11 pr-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition">
+                            </div>
+                        </div>
+
+                        <!-- Business Category -->
+                        <div>
+                            <label class="block text-sm font-bold mb-2" for="bizType">Business Category</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-400">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                </span>
+                                <select id="bizType" class="w-full pl-11 pr-4 py-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-indigo-500 focus:outline-none transition appearance-none">
+                                    <option value="Food & Dining">Food & Restaurant Delivery</option>
+                                    <option value="Thrift & Vintage">Thrift & Used Goods Market</option>
+                                    <option value="Furniture & Living">Furniture & Home Decor</option>
+                                    <option value="Tech & Gadgets">Tech & Electronics Store</option>
+                                    <option value="Art & Crafts">Artisanal & Handcrafted Goods</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Business UI Style / Theme Option -->
+                    <div>
+                        <label class="block text-sm font-bold mb-3">Business Page Style / UI Theme Option</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                            <!-- Modern Minimalist -->
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="bizTheme" value="Modern Minimalist" class="peer sr-only" checked>
+                                <div class="p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/50 dark:peer-checked:bg-indigo-950/40 transition text-center">
+                                    <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-700 dark:text-slate-200">
+                                        <i class="fa-solid fa-border-all"></i>
+                                    </div>
+                                    <div class="font-bold text-sm">Modern Minimalist</div>
+                                    <p class="text-xs text-slate-500 mt-1">Clean lines & sharp cards</p>
+                                </div>
+                            </label>
+
+                            <!-- Food Delivery Bento -->
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="bizTheme" value="Food Delivery Bento" class="peer sr-only">
+                                <div class="p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/50 dark:peer-checked:bg-indigo-950/40 transition text-center">
+                                    <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
+                                        <i class="fa-solid fa-bolt"></i>
+                                    </div>
+                                    <div class="font-bold text-sm">Food Delivery Bento</div>
+                                    <p class="text-xs text-slate-500 mt-1">Rounded pills & food app vibe</p>
+                                </div>
+                            </label>
+
+                            <!-- Thrift Retro -->
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="bizTheme" value="Thrift Retro" class="peer sr-only">
+                                <div class="p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/50 dark:peer-checked:bg-indigo-950/40 transition text-center">
+                                    <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-amber-800/20 text-amber-700 flex items-center justify-center">
+                                        <i class="fa-solid fa-tags"></i>
+                                    </div>
+                                    <div class="font-bold text-sm">Thrift Retro</div>
+                                    <p class="text-xs text-slate-500 mt-1">Rustic tags & vintage feel</p>
+                                </div>
+                            </label>
+
+                            <!-- Luxury Elegant -->
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="bizTheme" value="Luxury Elegant" class="peer sr-only">
+                                <div class="p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/50 dark:peer-checked:bg-indigo-950/40 transition text-center">
+                                    <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-cyan-500/20 text-cyan-600 flex items-center justify-center">
+                                        <i class="fa-solid fa-wand-magic"></i>
+                                    </div>
+                                    <div class="font-bold text-sm">Luxury Elegant</div>
+                                    <p class="text-xs text-slate-500 mt-1">Translucent blur drops</p>
+                                </div>
+                            </label>
+
+                            <!-- Tech Brutalist -->
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="bizTheme" value="Tech Brutalist" class="peer sr-only">
+                                <div class="p-4 rounded-2xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/50 dark:peer-checked:bg-indigo-950/40 transition text-center">
+                                    <div class="w-10 h-10 mx-auto mb-2 rounded-xl bg-rose-500/20 text-rose-600 flex items-center justify-center">
+                                        <i class="fa-solid fa-square-full"></i>
+                                    </div>
+                                    <div class="font-bold text-sm">Tech Brutalist</div>
+                                    <p class="text-xs text-slate-500 mt-1">Heavy borders & high contrast</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Typography Font Option -->
+                    <div>
+                        <label class="block text-sm font-bold mb-3">Storefront Typography Font Option</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="bizFont" value="sans" class="peer sr-only" checked>
+                                <div class="p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/50 dark:peer-checked:bg-indigo-950/40 transition text-center">
+                                    <div class="font-sans font-bold text-sm">Inter Sans</div>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Clean & Modern</p>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="bizFont" value="serif" class="peer sr-only">
+                                <div class="p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/50 dark:peer-checked:bg-indigo-950/40 transition text-center">
+                                    <div class="font-serif font-bold text-sm">Playfair Serif</div>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Luxury & Editorial</p>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="bizFont" value="mono" class="peer sr-only">
+                                <div class="p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/50 dark:peer-checked:bg-indigo-950/40 transition text-center">
+                                    <div class="font-mono font-bold text-sm">Fira Code</div>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Tech & Terminal</p>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="bizFont" value="display" class="peer sr-only">
+                                <div class="p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/50 dark:peer-checked:bg-indigo-950/40 transition text-center">
+                                    <div class="font-display font-bold text-sm">Outfit Display</div>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Geometric & Bold</p>
+                                </div>
+                            </label>
+                            <label class="cursor-pointer relative">
+                                <input type="radio" name="bizFont" value="rounded" class="peer sr-only">
+                                <div class="p-3 rounded-xl border-2 border-slate-200 dark:border-slate-700 peer-checked:border-indigo-600 peer-checked:bg-indigo-50/50 dark:peer-checked:bg-indigo-950/40 transition text-center">
+                                    <div class="font-rounded font-bold text-sm">Fredoka</div>
+                                    <p class="text-[11px] text-slate-500 mt-0.5">Friendly & Soft</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 10 Color Accent Options -->
+                    <div>
+                        <label class="block text-sm font-bold mb-3">10 Distinct Business Color Accent Options</label>
+                        <div class="grid grid-cols-5 sm:grid-cols-10 gap-3">
+                            <!-- Emerald -->
+                            <label class="cursor-pointer group text-center">
+                                <input type="radio" name="bizColor" value="emerald" class="peer sr-only" checked>
+                                <div class="w-10 h-10 mx-auto rounded-full bg-emerald-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow-md group-hover:scale-110 transition"></div>
+                                <span class="text-[11px] font-medium text-slate-500 mt-1 block">Emerald</span>
+                            </label>
+                            <!-- Amber -->
+                            <label class="cursor-pointer group text-center">
+                                <input type="radio" name="bizColor" value="amber" class="peer sr-only">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-amber-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow-md group-hover:scale-110 transition"></div>
+                                <span class="text-[11px] font-medium text-slate-500 mt-1 block">Amber</span>
+                            </label>
+                            <!-- Rose -->
+                            <label class="cursor-pointer group text-center">
+                                <input type="radio" name="bizColor" value="rose" class="peer sr-only">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-rose-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow-md group-hover:scale-110 transition"></div>
+                                <span class="text-[11px] font-medium text-slate-500 mt-1 block">Rose</span>
+                            </label>
+                            <!-- Cyan -->
+                            <label class="cursor-pointer group text-center">
+                                <input type="radio" name="bizColor" value="cyan" class="peer sr-only">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-cyan-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow-md group-hover:scale-110 transition"></div>
+                                <span class="text-[11px] font-medium text-slate-500 mt-1 block">Cyan</span>
+                            </label>
+                            <!-- Violet -->
+                            <label class="cursor-pointer group text-center">
+                                <input type="radio" name="bizColor" value="violet" class="peer sr-only">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-violet-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow-md group-hover:scale-110 transition"></div>
+                                <span class="text-[11px] font-medium text-slate-500 mt-1 block">Violet</span>
+                            </label>
+                            <!-- Fuchsia -->
+                            <label class="cursor-pointer group text-center">
+                                <input type="radio" name="bizColor" value="fuchsia" class="peer sr-only">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-fuchsia-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow-md group-hover:scale-110 transition"></div>
+                                <span class="text-[11px] font-medium text-slate-500 mt-1 block">Fuchsia</span>
+                            </label>
+                            <!-- Lime -->
+                            <label class="cursor-pointer group text-center">
+                                <input type="radio" name="bizColor" value="lime" class="peer sr-only">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-lime-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow-md group-hover:scale-110 transition"></div>
+                                <span class="text-[11px] font-medium text-slate-500 mt-1 block">Lime</span>
+                            </label>
+                            <!-- Orange -->
+                            <label class="cursor-pointer group text-center">
+                                <input type="radio" name="bizColor" value="orange" class="peer sr-only">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-orange-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow-md group-hover:scale-110 transition"></div>
+                                <span class="text-[11px] font-medium text-slate-500 mt-1 block">Orange</span>
+                            </label>
+                            <!-- Indigo -->
+                            <label class="cursor-pointer group text-center">
+                                <input type="radio" name="bizColor" value="indigo" class="peer sr-only">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-indigo-500 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow-md group-hover:scale-110 transition"></div>
+                                <span class="text-[11px] font-medium text-slate-500 mt-1 block">Indigo</span>
+                            </label>
+                            <!-- Slate -->
+                            <label class="cursor-pointer group text-center">
+                                <input type="radio" name="bizColor" value="slate" class="peer sr-only">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-slate-700 border-2 border-transparent peer-checked:border-slate-900 dark:peer-checked:border-white shadow-md group-hover:scale-110 transition"></div>
+                                <span class="text-[11px] font-medium text-slate-500 mt-1 block">Slate</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold text-lg shadow-xl shadow-indigo-600/30 hover:opacity-95 transition flex items-center justify-center space-x-3">
+                        <i class="fa-solid fa-rocket"></i>
+                        <span>Generate & Launch Storefront</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Pre-Configured Showcase Marketplace Section -->
+        <section id="showcase" class="py-16 bg-slate-100/50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+                    <div>
+                        <span class="text-indigo-600 dark:text-indigo-400 font-bold text-sm tracking-wider uppercase mb-2 block">Live Marketplace</span>
+                        <h2 class="text-3xl font-black tracking-tight">Explore Pre-Configured Storefronts</h2>
+                    </div>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm max-w-md mt-2 md:mt-0">
+                        Test-drive various styles, food deliveries, vintage thrift boutiques, and tech shops created by Senor Web creators.
+                    </p>
+                </div>
+
+                <!-- Showcase Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="showcaseGrid">
+                    <!-- Cards populated via script -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl font-black tracking-tight mb-4">Why Businesses Choose Senor Web</h2>
+                <p class="text-slate-600 dark:text-slate-400">Everything you need to sell online without managing complex multi-vendor infrastructure.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-8 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-xl font-bold mb-6">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">On-the-Spot Editing</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Modify your storefront identity, theme, font family, and color palette directly on your live page with zero friction.</p>
+                </div>
+                <div class="p-8 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xl font-bold mb-6">
+                        <i class="fa-solid fa-palette"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">5 Distinct UI Styles</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">From modern minimal to vibrant food delivery app and retro thrift tags, match your exact brand aesthetic.</p>
+                </div>
+                <div class="p-8 rounded-3xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center text-xl font-bold mb-6">
+                        <i class="fa-solid fa-share-nodes"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Instant Share URLs</h3>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Shareable encoded links containing all store settings so customers get your exact custom experience instantly.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold">S</div>
+                <span class="font-bold text-lg">Senor Web Platform</span>
+            </div>
+            <p class="text-sm text-slate-500">&copy; 2026 Senor Web Inc. Multi-category marketplace prototype.</p>
+            <div class="flex space-x-6 text-slate-400">
+                <a href="#" class="hover:text-indigo-600 transition"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" class="hover:text-indigo-600 transition"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="hover:text-indigo-600 transition"><i class="fa-brands fa-discord"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('Senor Web_theme', 'light');
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('Senor Web_theme', 'dark');
+            }
+        }
+
+        if (localStorage.getItem('Senor Web_theme') === 'dark' || (!localStorage.getItem('Senor Web_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        const showcaseStores = [
+            {
+                name: "Bella Vista Trattoria",
+                type: "Food & Dining",
+                theme: "Food Delivery Bento",
+                color: "rose",
+                font: "sans",
+                desc: "Wood-fired artisanal pizzas & homemade pasta delivered hot to your doorstep.",
+                image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
+                badgeColor: "bg-rose-100 text-rose-700 dark:bg-rose-900/50 dark:text-rose-300"
+            },
+            {
+                name: "Retro Vault Thrift",
+                type: "Thrift & Vintage",
+                theme: "Thrift Retro",
+                color: "amber",
+                font: "rounded",
+                desc: "Curated 90s streetwear, vintage jackets, and rare analog collectibles.",
+                image: "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?auto=format&fit=crop&w=600&q=80",
+                badgeColor: "bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300"
+            },
+            {
+                name: "Nordic Living Co.",
+                type: "Furniture & Living",
+                theme: "Modern Minimalist",
+                color: "emerald",
+                font: "display",
+                desc: "Minimalist oak furniture and Scandinavian ergonomic home accessories.",
+                image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80",
+                badgeColor: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300"
+            },
+            {
+                name: "Apex Cyberware",
+                type: "Tech & Gadgets",
+                theme: "Tech Brutalist",
+                color: "cyan",
+                font: "mono",
+                desc: "Next-gen mechanical keyboards, spatial audio gear, and RGB desk setups.",
+                image: "https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=600&q=80",
+                badgeColor: "bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-300"
+            },
+            {
+                name: "Clay & Canvas Studio",
+                type: "Art & Crafts",
+                theme: "Luxury Elegant",
+                color: "fuchsia",
+                font: "serif",
+                desc: "Hand-thrown ceramics, textured wall art, and custom pottery pieces.",
+                image: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=600&q=80",
+                badgeColor: "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/50 dark:text-fuchsia-300"
+            },
+            {
+                name: "GreenLeaf Organic Market",
+                type: "Food & Dining",
+                theme: "Modern Minimalist",
+                color: "lime",
+                font: "sans",
+                desc: "Farm-fresh organic produce, cold-pressed juices, and artisanal bakery.",
+                image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80",
+                badgeColor: "bg-lime-100 text-lime-700 dark:bg-lime-900/50 dark:text-lime-300"
+            }
+        ];
+
+        function renderShowcase() {
+            const grid = document.getElementById('showcaseGrid');
+            grid.innerHTML = showcaseStores.map(store => {
+                const targetUrl = `store.html?name=${encodeURIComponent(store.name)}&type=${encodeURIComponent(store.type)}&theme=${encodeURIComponent(store.theme)}&color=${encodeURIComponent(store.color)}&font=${encodeURIComponent(store.font)}`;
+                return `
+                    <div class="group bg-white dark:bg-slate-800 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-xl transition flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-48 overflow-hidden">
+                                <img src="${store.image}" alt="${store.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x400/indigo/white?text=Store'">
+                                <div class="absolute top-4 left-4">
+                                    <span class="px-3 py-1 rounded-full text-xs font-bold ${store.badgeColor} shadow-md">${store.type}</span>
+                                </div>
+                            </div>
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="text-xl font-bold">${store.name}</h3>
+                                    <span class="text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">${store.theme}</span>
+                                </div>
+                                <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">${store.desc}</p>
+                            </div>
+                        </div>
+                        <div class="px-6 pb-6 pt-0">
+                            <a href="${targetUrl}" class="w-full py-3 rounded-xl bg-slate-900 dark:bg-slate-700 hover:bg-indigo-600 dark:hover:bg-indigo-600 text-white font-bold text-sm transition flex items-center justify-center space-x-2">
+                                <span>Visit Storefront</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleStoreCreation(e) {
+            e.preventDefault();
+            const name = document.getElementById('bizName').value.trim();
+            const type = document.getElementById('bizType').value;
+            const theme = document.querySelector('input[name="bizTheme"]:checked').value;
+            const color = document.querySelector('input[name="bizColor"]:checked').value;
+            const font = document.querySelector('input[name="bizFont"]:checked').value;
+
+            const targetUrl = `store.html?name=${encodeURIComponent(name)}&type=${encodeURIComponent(type)}&theme=${encodeURIComponent(theme)}&color=${encodeURIComponent(color)}&font=${encodeURIComponent(font)}`;
+            window.location.href = targetUrl;
+        }
+
+        window.onload = function() {
+            renderShowcase();
+        }
+    </script>
+</body>
+</html>
